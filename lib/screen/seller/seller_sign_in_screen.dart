@@ -54,7 +54,8 @@ class SellerSignInScreenState extends State<SellerSignInScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(
+                          CustomTextField(                            controller: TextEditingController(),
+
                             labelName: 'Email',
                             hintTextName: 'Enter Your Email Address',
                             textInputType: TextInputType.number,
@@ -70,7 +71,8 @@ class SellerSignInScreenState extends State<SellerSignInScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(
+                          CustomTextField(                            controller: TextEditingController(),
+
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,

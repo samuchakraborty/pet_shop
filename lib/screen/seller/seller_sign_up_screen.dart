@@ -58,7 +58,8 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          CustomTextField(
+                          CustomTextField(                            controller: TextEditingController(),
+
                             labelName: 'Shop Name',
                             hintTextName: 'Enter Your Shop Name',
                             textInputType: TextInputType.text,
@@ -67,7 +68,8 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(
+                          CustomTextField(                            controller: TextEditingController(),
+
                             labelName: 'Email',
                             hintTextName: 'Enter Your Email Address',
                             textInputType: TextInputType.number,
@@ -79,7 +81,8 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                           SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(
+                          CustomTextField(                            controller: TextEditingController(),
+
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,

@@ -4,7 +4,6 @@ import 'package:pet_shop/screen/user/user_sign_in_screen.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 
-
 class UserSignUpScreen extends StatefulWidget {
   const UserSignUpScreen({Key? key}) : super(key: key);
 
@@ -37,7 +36,6 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                     bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   children: [
-
                     const SizedBox(
                       height: 40,
                     ),
@@ -46,6 +44,7 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                       child: Column(
                         children: [
                           CustomTextField(
+                            controller: TextEditingController(),
                             labelName: 'Name',
                             hintTextName: 'Enter Your Name',
                             textInputType: TextInputType.text,
@@ -55,6 +54,7 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                             height: 40,
                           ),
                           CustomTextField(
+                            controller: TextEditingController(),
                             labelName: 'Email',
                             hintTextName: 'Enter Your Email Address',
                             textInputType: TextInputType.number,
@@ -63,10 +63,11 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                               mobile = value;
                             },
                           ),
-                          SizedBox(
+                     const     SizedBox(
                             height: 40,
                           ),
                           CustomTextField(
+                            controller: TextEditingController(),
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,
@@ -88,7 +89,8 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                             height: 40,
                           ),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Colors.green),
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.green),
                             child: const Text('SIGN UP'),
                             onPressed: () {
                               // Navigator.pushNamed(

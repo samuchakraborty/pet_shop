@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pet_shop/all_seller_model.dart';
+import 'package:pet_shop/services/admin_services.dart';
+
+import '../../all_userModel.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
@@ -27,22 +32,35 @@ class _AdminHomePageState extends State<AdminHomePage>
     _tabController!.dispose();
   }
 
-  bool isSwitched = false;
-  var textValue = 'Switch is OFF';
+  // bool isSwitched = false;
+  // var textValue = 'Switch is OFF';
+  //
+  // void toggleSwitch(bool value) {
+  //   if (isSwitched == false) {
+  //     setState(() {
+  //       isSwitched = true;
+  //       textValue = 'Switch Button is ON';
+  //     });
+  //     print('Switch Button is ON');
+  //   } else {
+  //     setState(() {
+  //       isSwitched = false;
+  //       textValue = 'Switch Button is OFF';
+  //     });
+  //     print('Switch Button is OFF');
+  //   }
+  // }
+  final List<int> _selectedUserIds = [];
 
-  void toggleSwitch(bool value) {
-    if (isSwitched == false) {
+  void onUserSelected(bool selected, pid) {
+    if (selected == true) {
       setState(() {
-        isSwitched = true;
-        textValue = 'Switch Button is ON';
+        _selectedUserIds.add(pid);
       });
-      print('Switch Button is ON');
     } else {
       setState(() {
-        isSwitched = false;
-        textValue = 'Switch Button is OFF';
+        _selectedUserIds.remove(pid);
       });
-      print('Switch Button is OFF');
     }
   }
 
@@ -93,76 +111,138 @@ class _AdminHomePageState extends State<AdminHomePage>
               padding: const EdgeInsets.all(20),
               height: MediaQuery.of(context).size.height,
               child: TabBarView(controller: _tabController, children: [
-                UserCard(),
-                UserCard(),
+                Consumer(builder: (context, ref, child) {
+                  final adminAllUser = ref.watch(adminAllUserProvider);
+                  return adminAllUser.when(data: (data) {
+                    AlluserModel usrModel = AlluserModel.fromJson(data);
+
+                    return ListView.builder(
+                        itemCount: usrModel.data!.length,
+                        itemBuilder: (context, i) {
+                          return Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Name: ${usrModel.data![i].name}"),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                          "Mobile: ${usrModel.data![i].mobile}"),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                          "Status: ${_selectedUserIds.contains(int.parse(usrModel.data![i].id.toString())) == true ? " Active" : " InActive"}"),
+                                    ],
+                                  ),
+                                  Switch(
+                                    value: _selectedUserIds.contains(int.parse(
+                                        usrModel.data![i].id.toString())),
+                                    onChanged: (bool? selected) {
+                                      onUserSelected(
+                                        selected!,
+                                        int.parse(
+                                            usrModel.data![i].id.toString()),
+                                      );
+                                    },
+                                    activeColor: Colors.green,
+                                    activeTrackColor: Colors.greenAccent,
+                                    inactiveThumbColor: Colors.redAccent,
+                                    inactiveTrackColor: Colors.red,
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  }, error: (err, e) {
+                    return Text(e.toString());
+                  }, loading: () {
+                    return const Center(child: CircularProgressIndicator());
+                  });
+                }),
+                Consumer(builder: (context, ref, child) {
+                  final adminAllUser = ref.watch(adminAllSellerProvider);
+                  return adminAllUser.when(data: (data) {
+                    AllSellerModel usrModel = AllSellerModel.fromJson(data);
+
+                    return ListView.builder(
+                        itemCount: usrModel.data!.length,
+                        itemBuilder: (context, i) {
+                          return Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Image.network(
+                                          "http://petshop.itbros.xyz/${usrModel.data![i].logo}")),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "Owner Name: ${usrModel.data![i].owner!.name}"),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                          "Owner Mobile: ${usrModel.data![i].owner!.mobile}"),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                          "Store Name: ${usrModel.data![i].shopName}"),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                          "Status: ${_selectedUserIds.contains(int.parse(usrModel.data![i].id.toString())) == true ? " Active" : " InActive"}"),
+                                    ],
+                                  ),
+                                  Switch(
+                                    value: _selectedUserIds.contains(int.parse(
+                                        usrModel.data![i].id.toString())),
+                                    onChanged: (bool? selected) {
+                                      onUserSelected(
+                                        selected!,
+                                        int.parse(
+                                            usrModel.data![i].id.toString()),
+                                      );
+                                    },
+                                    activeColor: Colors.green,
+                                    activeTrackColor: Colors.greenAccent,
+                                    inactiveThumbColor: Colors.redAccent,
+                                    inactiveTrackColor: Colors.red,
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  }, error: (err, e) {
+                    return Text(e.toString());
+                  }, loading: () {
+                    return const Center(child: CircularProgressIndicator());
+                  });
+                }),
               ]),
             ),
           ],
         ),
       ),
     );
-  }
-}
-
-class UserCard extends StatefulWidget {
-  const UserCard({Key? key}) : super(key: key);
-
-  @override
-  State<UserCard> createState() => _UserCardState();
-}
-
-class _UserCardState extends State<UserCard> {
-  bool isSwitched = false;
-
-  var textValue = 'Switch is OFF';
-
-  void toggleSwitch(bool value) {
-    if (isSwitched == false) {
-      setState(() {
-        isSwitched = true;
-        textValue = 'Switch Button is ON';
-      });
-      print('Switch Button is ON');
-    } else {
-      setState(() {
-        isSwitched = false;
-        textValue = 'Switch Button is OFF';
-      });
-      print('Switch Button is OFF');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (context, i) {
-      return Card(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("Name: Samu Chakraborty"),
-                  Text("Mobile: 01851944605"),
-                  Text("Address : Dhaka"),
-                  Text("Email: samuckb@gmail.com"),
-                  Text("Status: Active"),
-                ],
-              ),
-              Switch(
-                onChanged: toggleSwitch,
-                value: isSwitched,
-                activeColor: Colors.green,
-                activeTrackColor: Colors.greenAccent,
-                inactiveThumbColor: Colors.red,
-                inactiveTrackColor: Colors.blueAccent,
-              )
-            ],
-          ),
-        ),
-      );
-    });
   }
 }

@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:pet_shop/screen/user/user_sign_up_screen.dart';
 import '../../widgets/custom_text_field.dart';
-
 
 class UserSignInScreen extends StatefulWidget {
   const UserSignInScreen({Key? key}) : super(key: key);
@@ -55,6 +53,7 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                             height: 40,
                           ),
                           CustomTextField(
+                            controller: TextEditingController(),
                             labelName: 'Email',
                             hintTextName: 'Enter Your Email Address',
                             textInputType: TextInputType.number,
@@ -70,7 +69,8 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(
+                          CustomTextField(                            controller: TextEditingController(),
+
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,
@@ -97,7 +97,8 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                             height: 40,
                           ),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Colors.green),
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.green),
                             child: const Text('LOG IN'),
                             onPressed: () {
                               // Navigator.pushNamed(
@@ -115,14 +116,12 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const UserSignUpScreen(),
                           ),
                         );
-
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
