@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/slivergrid.dart';
+
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
 
@@ -229,6 +231,167 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   );
                 },
               ),
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Item',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 19,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: const Text(
+                    'View All',
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontSize: 12),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            GridView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              // itemCount: 20,
+              // controller: _scrollController,
+              gridDelegate:const  SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
+                height: 320,
+                crossAxisCount: 2,
+              ),
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+               return    GestureDetector(
+                 onTap: () {
+
+                 },
+                 child: Card(
+                   elevation: 3,
+                   semanticContainer: true,
+                   child: Column(
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                             Container(
+                               alignment: Alignment.topLeft,
+                               padding: const EdgeInsets.all(8.0),
+                               decoration: BoxDecoration(
+                                 color: Color(0xFF0b894),
+                                 borderRadius: BorderRadius.circular(10),
+                               ),
+                               child: Text(
+                                 "Sale",
+                                 style: TextStyle(
+                                   color: Colors.red,
+                                   fontSize: 18,
+                                   fontWeight: FontWeight.w700,
+                                 ),
+                               ),
+                             ),
+                             Container(
+                               width: 20,
+                               child: Text(""),
+                             ),
+                           Container(
+                             alignment: Alignment.bottomRight,
+                             margin: EdgeInsets.only(right: 10),
+                             child: IconButton(
+                                 padding: const EdgeInsets.all(0),
+                                 icon: Icon(Icons.heart_broken),
+                                 onPressed: () {
+
+                                   //});
+                                 }),
+                           ),
+                         ],
+                       ),
+                       Container(
+                         height: 150,
+                         //  2.5,
+                         width: MediaQuery.of(context).size.width / 2,
+                         child: Image.asset("assets/seller-logo.png"),
+                       ),
+                       Container(
+                         alignment: Alignment.center,
+                         height: 50,
+                         padding: const EdgeInsets.all(5.0),
+                         child: Text(
+                           "Russian",
+                           maxLines: 2,
+                           textAlign: TextAlign.center,
+                           overflow: TextOverflow.ellipsis,
+                           style: TextStyle(
+                             fontSize: 16,
+                           ),
+                         ),
+                       ),
+                       Row(
+                         mainAxisSize: MainAxisSize.min,
+                         // crossAxisAlignment:
+                         //     CrossAxisAlignment.end,
+                         children: [
+                           SizedBox(
+                             width: 10,
+                           ),
+                           Expanded(
+                             child: Container(
+                               alignment: Alignment.topLeft,
+                               child: Text(
+                                 "৳ 200" ,
+                                 maxLines: 1,
+
+                               ),
+                             ),
+                           ),
+
+                             Expanded(
+                               child: Container(
+                                 alignment: Alignment.topLeft,
+                                 child: Text(
+                                   "৳200",
+                                   maxLines: 2,
+                                   style: TextStyle(
+                                     color: Colors.redAccent,
+                                     fontSize: 14,
+                                   ),
+                                 ),
+                               ),
+                             ),
+
+                           Expanded(
+                             child: IconButton(
+                                 padding: const EdgeInsets.all(0),
+                                 iconSize: 30,
+                                 icon: Icon(
+                                   Icons.shopping_cart,
+                                   color: Colors.orange,
+                                 ),
+                                 onPressed: () {
+
+                                 }
+
+                             ),
+                           ),
+                         ],
+                       ),
+                     ],
+                   ),
+                 ),
+               );
+
+              },
             )
           ],
         ),
