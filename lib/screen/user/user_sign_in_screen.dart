@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_shop/screen/user/user_home_screen.dart';
 import 'package:pet_shop/screen/user/user_sign_up_screen.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -101,10 +102,10 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                                 ElevatedButton.styleFrom(primary: Colors.green),
                             child: const Text('LOG IN'),
                             onPressed: () {
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   RouteConstants.homeScreen,
-                              // );
+                              Navigator.push(
+                                context,
+                               MaterialPageRoute(builder: (context)=>const UserHomeScreen())
+                              );
                               //if (_formKey.currentState!.validate()) {}
                             },
                           ),

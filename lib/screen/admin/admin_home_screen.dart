@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pet_shop/all_seller_model.dart';
+import 'package:pet_shop/model/all_seller_model.dart';
 import 'package:pet_shop/services/admin_services.dart';
 
-import '../../all_userModel.dart';
+import '../../model/all_userModel.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
