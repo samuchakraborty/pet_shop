@@ -263,7 +263,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             GridView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              // itemCount: 20,
+              itemCount: 400,
               // controller: _scrollController,
               gridDelegate:const  SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
                 height: 320,
