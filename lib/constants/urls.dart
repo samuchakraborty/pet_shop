@@ -14,5 +14,14 @@ class ConstantUrls{
   static String adminAllSeller = "$baseUrl/admin/sellers";
 
 
+  static String userHomeUrl = "$baseUrl/user/home";
+
+  static String allSellerUrl = "$baseUrl/user/shops";
+
+  static String shopWiseProductUrl = "$baseUrl/user/shops/";
+
+
+
+
 
 }
