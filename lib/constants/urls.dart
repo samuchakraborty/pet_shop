@@ -21,6 +21,9 @@ class ConstantUrls{
   static String shopWiseProductUrl = "$baseUrl/user/shops/";
 
 
+  static String userRegisterUrl = "$baseUrl/register";
+
+
 
 
 

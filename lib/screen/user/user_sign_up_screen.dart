@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pet_shop/screen/user/user_sign_in_screen.dart';
-
-import '../../widgets/custom_button.dart';
+import 'package:pet_shop/screen/user/user_home_screen.dart';
+import 'package:pet_shop/services/user_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/custom_text_field.dart';
 
 class UserSignUpScreen extends StatefulWidget {
@@ -13,9 +13,13 @@ class UserSignUpScreen extends StatefulWidget {
 
 class UserSignUpScreenState extends State<UserSignUpScreen> {
   bool _secureText = true;
+  TextEditingController name = TextEditingController();
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  late String mobile, password, policeBatchId, nidValue;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,7 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
         appBar: AppBar(
           title: const Text('User Sign Up'),
           centerTitle: true,
+
         ),
         body: ListView(
           shrinkWrap: true,
@@ -44,7 +49,7 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                       child: Column(
                         children: [
                           CustomTextField(
-                            controller: TextEditingController(),
+                            controller: name,
                             labelName: 'Name',
                             hintTextName: 'Enter Your Name',
                             textInputType: TextInputType.text,
@@ -54,28 +59,20 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                             height: 40,
                           ),
                           CustomTextField(
-                            controller: TextEditingController(),
-                            labelName: 'Email',
-                            hintTextName: 'Enter Your Email Address',
+                            controller: mobile,
+                            labelName: 'Mobile',
+                            hintTextName: 'Enter Your Mobile Number',
                             textInputType: TextInputType.number,
-                            onChangedFunction: (value) {
-                              //print(value);
-                              mobile = value;
-                            },
                           ),
-                     const     SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
                           CustomTextField(
-                            controller: TextEditingController(),
+                            controller: password,
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,
                             obscureTextTy: _secureText,
-                            onChangedFunction: (value) {
-                              // print(value);
-                              password = value;
-                            },
                             icon: _secureText
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
@@ -88,17 +85,71 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.green),
-                            child: const Text('SIGN UP'),
-                            onPressed: () {
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   RouteConstants.homeScreen,
-                              // ); //  if (_formKey.currentState!.validate()) {}
-                            },
-                          ),
+                          isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.green),
+                                  child: const Text('SIGN UP'),
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    await UserServices.userRegistration(
+                                            name: name.text,
+                                            mobile: mobile.text,
+                                            password: password.text)
+                                        .then((value) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      if (value.statusCode == 200) {
+                                        prefs.setString(
+                                            "userToken", value.data['token']);
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                "User Registration Successfully"),
+                                          ),
+                                        );
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const UserHomeScreen(),
+                                          ),
+                                        );
+                                      }
+                                    }, onError: (e, stackTrace) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(e.toString()),
+                                        ),
+                                      );
+                                    });
+
+                                    // Navigator.pushNamed(
+                                    //   context,
+                                    //   RouteConstants.homeScreen,
+                                    // ); //  if (_formKey.currentState!.validate()) {}
+                                  },
+                                ),
                         ],
                       ),
                     ),

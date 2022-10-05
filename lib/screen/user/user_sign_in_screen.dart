@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_shop/screen/user/user_home_screen.dart';
 import 'package:pet_shop/screen/user/user_sign_up_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/user_services.dart';
 import '../../widgets/custom_text_field.dart';
 
 class UserSignInScreen extends StatefulWidget {
@@ -13,7 +15,11 @@ class UserSignInScreen extends StatefulWidget {
 class UserSignInScreenState extends State<UserSignInScreen> {
   bool _secureText = true;
   final _formKey = GlobalKey<FormState>();
-  late String mobile, password, policeBatchId;
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
+  bool isLoading = false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,24 +60,18 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                             height: 40,
                           ),
                           CustomTextField(
-                            controller: TextEditingController(),
-                            labelName: 'Email',
-                            hintTextName: 'Enter Your Email Address',
+                            controller: mobile,
+                            labelName: 'Mobile',
+                            hintTextName: 'Enter Your Mobile Number',
                             textInputType: TextInputType.number,
-                            onChangedFunction: (value) {
-                              mobile = value;
-                            },
-                            validateFunction: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please Enter Your Email Address';
-                              }
-                            },
+
+                            validateFunction: (value) {},
                           ),
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(                            controller: TextEditingController(),
-
+                          CustomTextField(
+                            controller: password,
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,
@@ -80,10 +80,6 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Please Enter Your Password';
                               }
-                            },
-                            onChangedFunction: (value) {
-                              //print(value);
-                              password = value;
                             },
                             icon: _secureText
                                 ? Icons.visibility_off_outlined
@@ -97,16 +93,68 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          ElevatedButton(
+                          isLoading
+                              ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                              :   ElevatedButton(
                             style:
                                 ElevatedButton.styleFrom(primary: Colors.green),
                             child: const Text('LOG IN'),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                               MaterialPageRoute(builder: (context)=>const UserHomeScreen())
-                              );
-                              //if (_formKey.currentState!.validate()) {}
+                            onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+
+                              await UserServices.userLogin(
+
+                                      mobile: mobile.text,
+                                      password: password.text)
+                                  .then((value) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                if (value.statusCode == 200) {
+                                  // prefs.setString(
+                                  //     "userToken", value.data['token']);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text(
+                                          "User Registration Successfully"),
+                                    ),
+                                  );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserHomeScreen(),
+                                    ),
+                                  );
+                                }
+                              }, onError: (e, stackTrace) {
+                                    print(e.toString());
+                                setState(() {
+                                  isLoading = false;
+                                });
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(e.toString()),
+                                  ),
+                                );
+                              });
+
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   RouteConstants.homeScreen,
+                              // ); //  if (_formKey.currentState!.validate()) {}
                             },
                           ),
                         ],
