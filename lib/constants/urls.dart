@@ -24,6 +24,14 @@ class ConstantUrls{
   static String userRegisterUrl = "$baseUrl/register";
 
 
+  static String placeOrder = "$baseUrl/user/checkout";
+
+  static String getOrder = "$baseUrl/user/orders";
+
+
+
+
+
 
 
 

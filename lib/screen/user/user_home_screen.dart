@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pet_shop/screen/user/product_add_screen.dart';
 import 'package:pet_shop/screen/user/shop_wise_product.dart';
+import 'package:pet_shop/screen/user/user_order_screen.dart';
 import '../../cart_provider.dart';
+import '../../landing_screen.dart';
 import '../../model/all_product_model.dart';
 import '../../model/seller_model.dart';
 import '../../services/user_services.dart';
@@ -42,10 +44,11 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
         appBar: AppBar(
           leading: GestureDetector(
             onTap: () {
-
-
-
-
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>const  UserOrderScreen(),
+                  ));
             },
             child: const Icon(
               Icons.list_alt_outlined,
@@ -72,6 +75,24 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
             ),
             const SizedBox(
               width: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserOrSellerOrAdmin(),
+                  ),
+                );
+              },
+              child: const Icon(
+                Icons.logout,
+                size: 24,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
             )
           ],
         ),

@@ -12,12 +12,14 @@ class MyStore extends ChangeNotifier {
 
   late double totalCartValue;
 
-  MyStore() {
-    //set up data
-    productItem = products;
-    //send notification to provider
-    notifyListeners();
+ MyStore() {
+  //   //set up data
+  productItem = products;
+  //   // //send notification to provider
+notifyListeners();
   }
+
+
 
   List<AllProductHome> get products => productItem;
 
@@ -59,6 +61,13 @@ class MyStore extends ChangeNotifier {
   } //ef
 
 
+  removeCart(){
+    basketItem = [];
+
+    notifyListeners();
+
+
+  }
 
 //add ot remove any object in basket
   removeOneItemIntoBasket(AllProductHome p) {
@@ -69,10 +78,10 @@ class MyStore extends ChangeNotifier {
       basketItem.remove(p);
       print('item removeded');
     } else {
-      found!.qty -= 1;
+      basketItem.remove(p);
     }
 
-    notifyListeners();
+   notifyListeners();
   } //ef
 
   getBasketQty() {
@@ -83,52 +92,6 @@ class MyStore extends ChangeNotifier {
     notifyListeners();
     return total;
   }
-
-//add multiple qty at a time any object in basket
-//   addMultipleItemIntoBasket(AllProductHome p, int initialQty) {
-//     Product? found = basketItem.firstWhereOrNull((element) => element.slug == p.slug);
-//
-//     if (found != null) {
-//       // if(found.qty >= initialQty){
-//       //   found.qty = found.maxOrderableQty;
-//       // }
-//       // else {
-//       found.qty += initialQty;
-//       // }
-//
-//     } else {
-//       p.qty = initialQty;
-//       basketItem.add(p);
-//     }
-//
-//     notifyListeners();
-//   }
-//   // void toggleDone() {
-//   //   activeProductItem.qty++;
-//   // }
-//
-//   // void decreaseDown() {
-//   //   activeProductItem.qty == 0 ? 0 : activeProductItem.qty--;
-//   // }
-//
-//   // void updateTask(Product task) {
-//   //   task.toggleDone();
-//   //   notifyListeners();
-//   // }
-//
-//   void removeCard(AllProductHome task) {
-//     _addNewData.remove(task);
-//     notifyListeners();
-//   }
-// //
-//   void decrease(AllProductHome task) {
-//     if (task.qty == 1) {
-//       // removeCard(task);
-//       basketItem.remove(task);
-//     }
-//
-//     notifyListeners();
-//   }
 
   double getBasketTotalPrice() {
     double total = 0;
