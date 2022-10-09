@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pet_shop/screen/user/user_home_screen.dart';
 import 'package:pet_shop/screen/user/user_sign_up_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,7 +105,7 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                             onPressed: () async {
                               setState(() {
                                 isLoading = true;
-                              });
+                              });SystemChannels.textInput.invokeMethod('TextInput.hide');
 
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
@@ -118,8 +119,8 @@ class UserSignInScreenState extends State<UserSignInScreen> {
                                   isLoading = false;
                                 });
                                 if (value.statusCode == 200) {
-                                  // prefs.setString(
-                                  //     "userToken", value.data['token']);
+                                  prefs.setString(
+                                      "userToken", value.data['token']);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

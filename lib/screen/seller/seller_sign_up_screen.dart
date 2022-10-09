@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pet_shop/screen/seller/seller_home_screen.dart';
+import 'package:pet_shop/services/seller_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/custom_text_field.dart';
-
 
 class SellerSignUpScreen extends StatefulWidget {
   const SellerSignUpScreen({Key? key}) : super(key: key);
@@ -13,8 +16,15 @@ class SellerSignUpScreen extends StatefulWidget {
 class SellerSignUpScreenState extends State<SellerSignUpScreen> {
   bool _secureText = true;
 
+  TextEditingController name = TextEditingController();
+  TextEditingController shopName = TextEditingController();
+
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
-  late String mobile, password, policeBatchId, nidValue;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +47,7 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                   children: [
                     Container(
                       alignment: Alignment.topCenter,
-                    //  margin: const EdgeInsets.only(right: 120),
+                      //  margin: const EdgeInsets.only(right: 120),
                       child: const Center(
                         child: Text(
                           "Create Shop",
@@ -58,8 +68,18 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          CustomTextField(                            controller: TextEditingController(),
-
+                          CustomTextField(
+                            controller: name,
+                            labelName: 'Name',
+                            hintTextName: 'Enter Your Name',
+                            textInputType: TextInputType.text,
+                            onChangedFunction: (value) {},
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          CustomTextField(
+                            controller: shopName,
                             labelName: 'Shop Name',
                             hintTextName: 'Enter Your Shop Name',
                             textInputType: TextInputType.text,
@@ -68,29 +88,21 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(                            controller: TextEditingController(),
-
-                            labelName: 'Email',
-                            hintTextName: 'Enter Your Email Address',
+                          CustomTextField(
+                            controller: mobile,
+                            labelName: 'Mobile',
+                            hintTextName: 'Enter Your Mobile Number',
                             textInputType: TextInputType.number,
-                            onChangedFunction: (value) {
-                              //print(value);
-                              mobile = value;
-                            },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(                            controller: TextEditingController(),
-
+                          CustomTextField(
+                            controller: password,
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,
                             obscureTextTy: _secureText,
-                            onChangedFunction: (value) {
-                              // print(value);
-                              password = value;
-                            },
                             icon: _secureText
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
@@ -103,16 +115,72 @@ class SellerSignUpScreenState extends State<SellerSignUpScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Colors.green),
-                            child: const Text('SIGN UP'),
-                            onPressed: () {
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   RouteConstants.homeScreen,
-                              // ); //  if (_formKey.currentState!.validate()) {}
-                            },
-                          ),
+                          isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.green),
+                                  child: const Text('SIGN UP'),
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    await SellerServices.userRegistration(
+                                      name: name.text,
+                                      mobile: mobile.text,
+                                      password: password.text,
+                                      shopName: shopName.text,
+                                    ).then((value) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      if (value.statusCode == 200) {
+                                        prefs.setString(
+                                            "sellerToken", value.data['token']);
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                "User Registration Successfully"),
+                                          ),
+                                        );
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SellerHomeScreen(),
+                                          ),
+                                        );
+                                      }
+                                    }, onError: (e, stackTrace) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(e.toString()),
+                                        ),
+                                      );
+                                    });
+
+                                    // Navigator.pushNamed(
+                                    //   context,
+                                    //   RouteConstants.homeScreen,
+                                    // ); //  if (_formKey.currentState!.validate()) {}
+                                  },
+                                ),
                         ],
                       ),
                     ),

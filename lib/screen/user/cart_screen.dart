@@ -74,8 +74,8 @@ class _CartScreenState extends State<CartScreen> {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.only(left: 5),
-                                      child: Image.asset(
-                                        "assets/dog.jpg",
+                                      child: Image.network(
+                                        "http://petshop.itbros.xyz/${product[i].image}",
                                         height: 150,
                                         width: 150,
                                         fit: BoxFit.fill,

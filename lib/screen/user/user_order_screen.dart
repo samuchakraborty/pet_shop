@@ -25,7 +25,7 @@ class UserOrderScreen extends StatelessWidget {
                   UserOrderModel userOrderModel = UserOrderModel.fromJson(data);
 
                   return ListView.builder(
-                    itemCount: userOrderModel.data!.length,
+                    itemCount: userOrderModel.data!.reversed.length,
                     itemBuilder: (context, i) {
                       var orders = userOrderModel.data![i];
                       return GestureDetector(
@@ -42,7 +42,7 @@ class UserOrderScreen extends StatelessWidget {
                           child: Card(
                               elevation: 6,
                               child: Container(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,

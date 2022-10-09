@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pet_shop/screen/user/user_home_screen.dart';
 import 'package:pet_shop/services/user_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -97,7 +98,7 @@ class UserSignUpScreenState extends State<UserSignUpScreen> {
                                     setState(() {
                                       isLoading = true;
                                     });
-
+                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
 

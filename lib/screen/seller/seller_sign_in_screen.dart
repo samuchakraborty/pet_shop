@@ -1,8 +1,10 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pet_shop/screen/seller/seller_home_screen.dart';
 import 'package:pet_shop/screen/seller/seller_sign_up_screen.dart';
+import 'package:pet_shop/services/seller_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/custom_text_field.dart';
-
 
 class SellerSignInScreen extends StatefulWidget {
   const SellerSignInScreen({Key? key}) : super(key: key);
@@ -14,7 +16,9 @@ class SellerSignInScreen extends StatefulWidget {
 class SellerSignInScreenState extends State<SellerSignInScreen> {
   bool _secureText = true;
   final _formKey = GlobalKey<FormState>();
-  late String mobile, password, policeBatchId;
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,25 +58,22 @@ class SellerSignInScreenState extends State<SellerSignInScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(                            controller: TextEditingController(),
-
-                            labelName: 'Email',
-                            hintTextName: 'Enter Your Email Address',
+                          CustomTextField(
+                            controller: mobile,
+                            labelName: 'Mobile',
+                            hintTextName: 'Enter Your Mobile Number',
                             textInputType: TextInputType.number,
-                            onChangedFunction: (value) {
-                              mobile = value;
-                            },
                             validateFunction: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please Enter Your Email Address';
+                                return 'Please Enter Your Mobile Number';
                               }
                             },
                           ),
                           const SizedBox(
                             height: 40,
                           ),
-                          CustomTextField(                            controller: TextEditingController(),
-
+                          CustomTextField(
+                            controller: password,
                             labelName: 'Password',
                             hintTextName: 'Enter your password',
                             textInputType: TextInputType.visiblePassword,
@@ -81,10 +82,6 @@ class SellerSignInScreenState extends State<SellerSignInScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Please Enter Your Password';
                               }
-                            },
-                            onChangedFunction: (value) {
-                              //print(value);
-                              password = value;
                             },
                             icon: _secureText
                                 ? Icons.visibility_off_outlined
@@ -98,17 +95,70 @@ class SellerSignInScreenState extends State<SellerSignInScreen> {
                           const SizedBox(
                             height: 40,
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Colors.green),
-                            child: const Text('LOG IN'),
-                            onPressed: () {
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   RouteConstants.homeScreen,
-                              // );
-                              //if (_formKey.currentState!.validate()) {}
-                            },
-                          ),
+                          isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.green),
+                                  child: const Text('LOG IN'),
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    await SellerServices.userLogin(
+                                            mobile: mobile.text,
+                                            password: password.text)
+                                        .then((value) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      if (value.statusCode == 200) {
+                                        prefs.setString(
+                                            "sellerToken", value.data['token']);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                "Seller Log in Successfully"),
+                                          ),
+                                        );
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                            const SellerHomeScreen(),
+                                          ),
+                                        );
+                                      }
+                                    }, onError: (e, stackTrace) {
+                                      print(e.toString());
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(e.toString()),
+                                        ),
+                                      );
+                                    });
+
+                                    // Navigator.pushNamed(
+                                    //   context,
+                                    //   RouteConstants.homeScreen,
+                                    // ); //  if (_formKey.currentState!.validate()) {}
+                                  },
+                                ),
                         ],
                       ),
                     ),
@@ -117,14 +167,12 @@ class SellerSignInScreenState extends State<SellerSignInScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const SellerSignUpScreen(),
                           ),
                         );
-
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
