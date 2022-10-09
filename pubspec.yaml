@@ -20,6 +20,7 @@ dependencies:
   cached_network_image: ^3.2.0
   dio: ^4.0.6
   intl: ^0.17.0
+  image_picker: ^0.8.6
 
 
 dev_dependencies:
@@ -38,6 +39,9 @@ flutter:
   assets:
    - assets/
    - assets/dog.jpg
+   - assets/preview.png
+   - assets/camera_colored.png
+   - assets/gallery.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

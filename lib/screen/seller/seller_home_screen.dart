@@ -1,39 +1,21 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pet_shop/screen/user/product_add_screen.dart';
+import 'package:pet_shop/screen/seller/seller_product_add_screen.dart';
 import 'package:pet_shop/screen/user/user_order_screen.dart';
-import '../../cart_provider.dart';
 import '../../landing_screen.dart';
-import '../../model/all_product_model.dart';
+import '../../model/seller_product_model.dart';
+import '../../services/seller_services.dart';
 import '../../services/user_services.dart';
 import '../../widgets/slivergrid.dart';
 
-class SellerHomeScreen extends ConsumerStatefulWidget {
+class SellerHomeScreen extends StatefulWidget {
   const SellerHomeScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SellerHomeScreen> createState() => _SellerHomeScreenState();
+  State<SellerHomeScreen> createState() => _SellerHomeScreenState();
 }
 
-class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
-  final int _current = 0;
-  final CarouselController _controller = CarouselController();
-
-  List<Widget> imageSliders = imgList
-      .map((item) => Container(
-    margin: const EdgeInsets.all(5.0),
-    height: 100,
-    child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-        child: Stack(
-          children: <Widget>[
-            Image.network(item, fit: BoxFit.cover, width: 1000.0),
-          ],
-        )),
-  ))
-      .toList();
-
+class _SellerHomeScreenState extends State<SellerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,7 +26,7 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>const  UserOrderScreen(),
+                    builder: (context) => const UserOrderScreen(),
                   ));
             },
             child: const Icon(
@@ -98,7 +80,6 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
           shrinkWrap: true,
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -123,24 +104,36 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
               height: 10,
             ),
             Consumer(builder: (context, ref, child) {
-              final getAllProductUrl = ref.watch(userAllProductProvider);
+              final getAllProductUrl = ref.watch(sellerProductProvider);
 
               return getAllProductUrl.when(
                 data: (jsonResponse) {
-                  List<dynamic> usersList = jsonResponse
-                      .map((data) => AllProductHome.fromJson(data))
-                      .toList();
+                  SellerProduct usersList =
+                      SellerProduct.fromJson(jsonResponse);
 
-                  return GridView.builder(
+                  return
+
+                    usersList.data!.isEmpty
+                        ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Center(
+                          child: Text("No Product Added"),
+                        )
+                      ],
+                    )
+                        :
+
+                    GridView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: usersList.length,
+                    itemCount: usersList.data!.length,
                     gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
-                        height: 300,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 2),
+                        const SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
+                            height: 300,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 4,
+                            mainAxisSpacing: 2),
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -157,7 +150,7 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     alignment: Alignment.topLeft,
@@ -188,14 +181,14 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
                                 //  2.5,
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: Image.network(
-                                    "http://petshop.itbros.xyz/${usersList[index].image}"),
+                                    "http://petshop.itbros.xyz/${usersList.data![index].image}"),
                               ),
                               Container(
                                 alignment: Alignment.center,
                                 height: 50,
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
-                                  usersList[index].name,
+                                  usersList.data![index].name.toString(),
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
@@ -216,29 +209,30 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
                                     child: Container(
                                       alignment: Alignment.topLeft,
                                       child: Text(
-                                        "৳ ${usersList[index].price.toString()}",
+                                        "৳ ${usersList.data![index].price.toString()}",
                                         maxLines: 1,
                                         style: TextStyle(
-                                          color: usersList[index].offerPrice !=
-                                              null
+                                          color: usersList.data![index]
+                                                      .offerPrice !=
+                                                  null
                                               ? Colors.black
                                               : Colors.redAccent,
                                           fontSize: 14,
-                                          decoration:
-                                          usersList[index].offerPrice ==
-                                              null
+                                          decoration: usersList.data![index]
+                                                      .offerPrice ==
+                                                  null
                                               ? TextDecoration.none
                                               : TextDecoration.lineThrough,
                                         ),
                                       ),
                                     ),
                                   ),
-                                  if (usersList[index].offerPrice != null)
+                                  if (usersList.data![index].offerPrice != null)
                                     Expanded(
                                       child: Container(
                                         alignment: Alignment.topLeft,
                                         child: Text(
-                                          "৳ ${usersList[index].offerPrice.toString()}",
+                                          "৳ ${usersList.data![index].offerPrice.toString()}",
                                           maxLines: 2,
                                           style: const TextStyle(
                                             color: Colors.redAccent,
@@ -249,18 +243,14 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
                                     ),
                                   Expanded(
                                     child: IconButton(
-                                        padding: const EdgeInsets.all(0),
-                                        iconSize: 30,
-                                        icon: const Icon(
-                                          Icons.shopping_cart,
-                                          color: Colors.orange,
-                                        ),
-                                        onPressed: () {
-                                          ref
-                                              .watch(cartNotifier)
-                                              .addOneItemIntoBasket(
-                                              usersList[index]);
-                                        }),
+                                      padding: const EdgeInsets.all(0),
+                                      iconSize: 30,
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.orange,
+                                      ),
+                                      onPressed: () {},
+                                    ),
                                   ),
                                 ],
                               ),
@@ -295,7 +285,7 @@ class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProductAddScreen(),
+                builder: (context) => const SellerProductAddScreen(),
               ),
             );
           },

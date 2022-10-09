@@ -562,12 +562,12 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
         ),
         floatingActionButton: FloatingActionButton.small(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ProductAddScreen(),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const ProductAddScreen(),
+            //   ),
+            // );
           },
           child: const Icon(Icons.add),
         ),
