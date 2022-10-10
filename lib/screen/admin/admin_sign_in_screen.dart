@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_shop/screen/user/user_sign_up_screen.dart';
 import 'package:pet_shop/services/admin_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/custom_text_field.dart';
 import 'admin_home_screen.dart';
 
@@ -104,6 +105,7 @@ class AdminSignInScreenState extends State<AdminSignInScreen> {
                                     setState(() {
                                       isLoading = true;
                                     });
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
 
                                     await AdminServices.adminLogin(
                                             mobile: mobileController.text,
@@ -113,8 +115,9 @@ class AdminSignInScreenState extends State<AdminSignInScreen> {
                                         setState(() {
                                           isLoading = false;
                                         });
+                                        // print(value.data);
+                                       prefs.setString("adminToken", (value.data)['token']);
 
-                                        // print(respons)
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

@@ -114,6 +114,7 @@ class _AdminHomePageState extends State<AdminHomePage>
                 Consumer(builder: (context, ref, child) {
                   final adminAllUser = ref.watch(adminAllUserProvider);
                   return adminAllUser.when(data: (data) {
+                    print(data);
                     AlluserModel usrModel = AlluserModel.fromJson(data);
 
                     return ListView.builder(
@@ -176,58 +177,69 @@ class _AdminHomePageState extends State<AdminHomePage>
 
                     return ListView.builder(
                         itemCount: usrModel.data!.length,
+                        // padding: EdgeInsets.symmetric(vertical: 20),
                         itemBuilder: (context, i) {
                           return Card(
+                            margin:  EdgeInsets.symmetric(vertical: 10),
                             child: Container(
                               padding: const EdgeInsets.all(20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: Image.network(
-                                          "http://petshop.itbros.xyz/${usrModel.data![i].logo}")),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "Owner Name: ${usrModel.data![i].owner!.name}"),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          "Owner Mobile: ${usrModel.data![i].owner!.mobile}"),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          "Store Name: ${usrModel.data![i].shopName}"),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          "Status: ${_selectedUserIds.contains(int.parse(usrModel.data![i].id.toString())) == true ? " Active" : " InActive"}"),
-                                    ],
-                                  ),
-                                  Switch(
-                                    value: _selectedUserIds.contains(int.parse(
-                                        usrModel.data![i].id.toString())),
-                                    onChanged: (bool? selected) {
-                                      onUserSelected(
-                                        selected!,
-                                        int.parse(
-                                            usrModel.data![i].id.toString()),
-                                      );
-                                    },
-                                    activeColor: Colors.green,
-                                    activeTrackColor: Colors.greenAccent,
-                                    inactiveThumbColor: Colors.redAccent,
-                                    inactiveTrackColor: Colors.red,
-                                  )
-                                ],
+                              child: FittedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    usrModel.data![i].logo == null
+                                        ? SizedBox(
+                                            width: 40,
+                                            height: 60,
+                                            child: Image.asset("assets/seller-logo.png"),
+                                          )
+                                        : SizedBox(
+                                            width: 40,
+                                            height: 40,
+                                            child: Image.network(
+                                                "http://petshop.itbros.xyz/${usrModel.data![i].logo}")),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "Owner Name: ${usrModel.data![i].owner!.name}"),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                            "Owner Mobile: ${usrModel.data![i].owner!.mobile}"),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                            "Store Name: ${usrModel.data![i].shopName}"),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                            "Status: ${_selectedUserIds.contains(int.parse(usrModel.data![i].id.toString())) == true ? " Active" : " InActive"}"),
+                                      ],
+                                    ),
+                                    Switch(
+                                      value: _selectedUserIds.contains(
+                                          int.parse(
+                                              usrModel.data![i].id.toString())),
+                                      onChanged: (bool? selected) {
+                                        onUserSelected(
+                                          selected!,
+                                          int.parse(
+                                              usrModel.data![i].id.toString()),
+                                        );
+                                      },
+                                      activeColor: Colors.green,
+                                      activeTrackColor: Colors.greenAccent,
+                                      inactiveThumbColor: Colors.redAccent,
+                                      inactiveTrackColor: Colors.red,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           );
