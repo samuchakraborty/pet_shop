@@ -192,4 +192,31 @@ class UserServices {
       throw "No internet";
     }
   }
+
+
+  static Future<dynamic> userAddProduct({required data}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.get("userToken").toString();
+
+    try {
+      final response = await Dio()
+          .post(ConstantUrls.userProductAddUrl,
+          data: data,
+          options: Options(
+            // followRedirects: false,
+              followRedirects: false,
+              validateStatus: (status) {
+                return status! < 500;
+              },
+              headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer $token"
+              }))
+          .timeout(const Duration(seconds: 20));
+      print(response.data);
+      return response;
+    } on SocketException {
+      throw "no Internet";
+    }
+  }
 }

@@ -182,6 +182,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
                     SellerModel allSeller = SellerModel.fromJson(data);
 
                     return ListView.builder(
+                      reverse: true,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemCount: allSeller.data!.length,
@@ -296,11 +297,12 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
 
                 return getAllProductUrl.when(
                   data: (data) {
-                    print(data);
                     SellerModel allSeller = SellerModel.fromJson(data);
 
                     return ListView.builder(
                       shrinkWrap: true,
+                      reverse: true,
+
                       scrollDirection: Axis.horizontal,
                       itemCount: allSeller.data!.length,
                       itemBuilder: (context, i) {
@@ -562,12 +564,12 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
         ),
         floatingActionButton: FloatingActionButton.small(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => const ProductAddScreen(),
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserProductAddScreen(),
+              ),
+            );
           },
           child: const Icon(Icons.add),
         ),
