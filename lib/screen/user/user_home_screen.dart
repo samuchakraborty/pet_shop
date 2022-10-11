@@ -290,63 +290,136 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
               height: 10,
             ),
             SizedBox(
-              height: 120,
+              height: 180,
               width: MediaQuery.of(context).size.width,
-              child: Consumer(builder: (context, ref, child) {
-                final getAllProductUrl = ref.watch(allSellerProvider);
+              child:   Consumer(builder: (context, ref, child) {
+                final getAllProductUrl = ref.watch(userAllProductProvider);
 
                 return getAllProductUrl.when(
-                  data: (data) {
-                    SellerModel allSeller = SellerModel.fromJson(data);
+                  data: (jsonResponse) {
+                    List<dynamic> usersList = jsonResponse
+                        .map((data) => AllProductHome.fromJson(data))
+                        .toList();
 
                     return ListView.builder(
-                      shrinkWrap: true,
-                      reverse: true,
-
                       scrollDirection: Axis.horizontal,
-                      itemCount: allSeller.data!.length,
-                      itemBuilder: (context, i) {
-                        return Card(
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
-                          child: Stack(
-                            children: [
-                              allSeller.data![i].profilePicture == null
-                                  ? const SizedBox(
-                                      width: 150,
-                                      height: 100,
-                                    )
-                                  : Image.network(
-                                      "http://petshop.itbros.xyz/${allSeller.data![i].logo}",
-                                      width: 150,
-                                      height: 100,
-                                    ),
-                              Positioned(
-                                bottom: 40,
-                                // top: 10,
-                                left: 20,
-                                right: 20,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 5),
-                                  decoration:
-                                      const BoxDecoration(color: Colors.black),
-                                  width: 134,
-                                  child: Text(
-                                    allSeller.data![i].shopName.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white),
-                                    overflow: TextOverflow.ellipsis,
+                      shrinkWrap: true,
+                      itemCount: usersList.length,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                      return  usersList[index].type == "service" ?
+                         GestureDetector(
+                          onTap: () {},
+                          child: Card(
+                            elevation: 3,
+                            margin: const EdgeInsets.all(5),
+                            // semanticContainer: true,
+                            child: SizedBox(
+                              width: 150,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
                                   ),
-                                ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.topLeft,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0XFF0b894),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Text(
+                                          " Sale",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                      // Container(
+                                      //   width: 20,
+                                      //   child:const Text(""),
+                                      // ),
+                                    ],
+                                  ),
+
+                                  SizedBox(
+                                    height: 60,
+
+                                    child: Image.network(
+                                        "http://petshop.itbros.xyz/${usersList[index].image}"),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    // height: 50,
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      usersList[index].name,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.end,
+                                    children: [
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            "৳ ${usersList[index].price.toString()}",
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              color: usersList[index].offerPrice !=
+                                                  null
+                                                  ? Colors.black
+                                                  : Colors.redAccent,
+                                              fontSize: 14,
+                                              decoration:
+                                              usersList[index].offerPrice ==
+                                                  null
+                                                  ? TextDecoration.none
+                                                  : TextDecoration.lineThrough,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      if (usersList[index].offerPrice != null)
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              "৳ ${usersList[index].offerPrice.toString()}",
+                                              maxLines: 2,
+                                              style: const TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        );
+                        ) : Container();
                       },
                     );
                   },
@@ -355,7 +428,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            ref.refresh(allSellerProvider);
+                            ref.refresh(userAllProductProvider);
                           },
                           child: const Text("Load Data"),
                         )

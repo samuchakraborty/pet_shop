@@ -27,7 +27,7 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
   TextEditingController description = TextEditingController();
 
   TextEditingController price = TextEditingController();
-  TextEditingController offerPrice = TextEditingController();
+  // TextEditingController offerPrice = TextEditingController();
 
   ProductType productType = ProductType.initial;
 
@@ -44,7 +44,7 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text("Pet Sell / PetCare"),
+          title: const Text("PetCare"),
         ),
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -84,15 +84,15 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
                       hintTextName: 'Enter price amount',
                       textInputType: TextInputType.visiblePassword,
                     ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    CustomTextField(
-                      controller: offerPrice,
-                      labelName: 'Discount Price',
-                      hintTextName: 'Enter discount price',
-                      textInputType: TextInputType.visiblePassword,
-                    ),
+                    // const SizedBox(
+                    //   height: 40,
+                    // ),
+                    // CustomTextField(
+                    //   controller: offerPrice,
+                    //   labelName: 'Discount Price',
+                    //   hintTextName: 'Enter discount price',
+                    //   textInputType: TextInputType.visiblePassword,
+                    // ),
                     const SizedBox(
                       height: 40,
                     ),
@@ -301,7 +301,7 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
       "name": name.text,
       "description": description.text,
       "price": price.text,
-      "offer_price": offerPrice.text,
+      "offer_price":"",
       "type": productType.name.toString(),
       "image": await MultipartFile.fromFile(imageFile!.path,
           filename: imageFile!.path.split('/').last),
