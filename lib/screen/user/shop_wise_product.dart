@@ -23,7 +23,7 @@ class SingleProductScreen extends StatelessWidget {
             centerTitle: true,
           ),
           body: Consumer(builder: (context, ref, child) {
-            final getAllProductUrl = ref.watch(userAllProductProvider);
+            final getAllProductUrl = ref.watch(allSellerWiseProductProvider(shopSlug));
 
             return getAllProductUrl.when(
               data: (jsonResponse) {

@@ -9,14 +9,26 @@ import '../../services/seller_services.dart';
 import '../../services/user_services.dart';
 import '../../widgets/slivergrid.dart';
 
-class SellerHomeScreen extends StatefulWidget {
+class SellerHomeScreen extends ConsumerStatefulWidget {
   const SellerHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<SellerHomeScreen> createState() => _SellerHomeScreenState();
+  ConsumerState<SellerHomeScreen> createState() => _SellerHomeScreenState();
 }
 
-class _SellerHomeScreenState extends State<SellerHomeScreen> {
+class _SellerHomeScreenState extends ConsumerState<SellerHomeScreen> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    ref.refresh(sellerProductProvider);
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

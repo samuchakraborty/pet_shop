@@ -27,6 +27,7 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
   TextEditingController description = TextEditingController();
 
   TextEditingController price = TextEditingController();
+
   // TextEditingController offerPrice = TextEditingController();
 
   ProductType productType = ProductType.initial;
@@ -106,29 +107,29 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
                     FittedBox(
                       child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Radio(
-                                value: ProductType.product,
-                                groupValue: productType,
-                                activeColor: Colors.green,
-                                onChanged: (ProductType? value) {
-                                  setState(() {
-                                    productType = value!;
-                                    // _radioVal = 'isEmail';
-                                    //   print(_radioVal);
-                                  });
-                                },
-                              ),
-                              const Text(
-                                "Product",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          //   // crossAxisAlignment: CrossAxisAlignment.center,
+                          //   children: [
+                          //     Radio(
+                          //       value: ProductType.product,
+                          //       groupValue: productType,
+                          //       activeColor: Colors.green,
+                          //       onChanged: (ProductType? value) {
+                          //         setState(() {
+                          //           productType = value!;
+                          //           // _radioVal = 'isEmail';
+                          //           //   print(_radioVal);
+                          //         });
+                          //       },
+                          //     ),
+                          //     const Text(
+                          //       "Product",
+                          //       style: TextStyle(
+                          //           fontSize: 14, fontWeight: FontWeight.w500),
+                          //     ),
+                          //   ],
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             // crossAxisAlignment: CrossAxisAlignment.center,
@@ -272,9 +273,7 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.green),
-                              child: Text(productType == ProductType.service
-                                  ? 'Add Service'
-                                  : 'Sell Pet'),
+                              child: const Text('Add Service'),
                               onPressed: () async {
                                 SystemChannels.textInput
                                     .invokeMethod('TextInput.hide');
@@ -301,7 +300,7 @@ class _UserProductAddScreenState extends ConsumerState<UserProductAddScreen> {
       "name": name.text,
       "description": description.text,
       "price": price.text,
-      "offer_price":"",
+      "offer_price": "",
       "type": productType.name.toString(),
       "image": await MultipartFile.fromFile(imageFile!.path,
           filename: imageFile!.path.split('/').last),

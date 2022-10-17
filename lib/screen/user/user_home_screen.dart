@@ -113,7 +113,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
                     .map((item) => Center(
                             child: Image.asset(
                           item,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           height: 150,
                           width: MediaQuery.of(context).size.width,
                         )))
@@ -148,6 +148,9 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
                 ),
               ),
             ]),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -368,7 +371,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 10,),
+                                  const SizedBox(height: 10,),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     // crossAxisAlignment:
@@ -652,11 +655,11 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
 }
 
 List<String> imgList = [
-  "assets/seller-logo.png",
-  "assets/seller-logo.png",
-  "assets/seller-logo.png",
-  "assets/seller-logo.png",
-  "assets/seller-logo.png",
-  "assets/seller-logo.png",
-  "assets/seller-logo.png",
+  "assets/p1.jpeg",
+  "assets/p2.jpeg",
+  "assets/p3.jpeg",
+  "assets/p4.jpeg",
+  "assets/p5.jpeg",
+
+
 ];

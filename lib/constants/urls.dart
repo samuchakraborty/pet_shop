@@ -24,4 +24,6 @@ class ConstantUrls {
   static String sellerProductAdd = "$baseUrl/seller/products/store";
 
   static String userProductAddUrl = "$baseUrl/user/products/store";
+
+
 }
