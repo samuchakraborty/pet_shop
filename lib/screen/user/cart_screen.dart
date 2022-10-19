@@ -81,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                                         fit: BoxFit.fill,
                                       ),
                                     ),
-                                    const SizedBox(width: 3),
+                                    const SizedBox(width: 13),
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -98,15 +98,43 @@ class _CartScreenState extends State<CartScreen> {
                                             product[i].name.toString(),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
+                                            style: const TextStyle(fontSize: 16),
                                           ),
                                         ),
                                         const SizedBox(
                                           height: 15,
                                         ),
-                                        Text(
-                                          "${product[i].price} ৳",
-                                          style: const TextStyle(
-                                              color: Colors.lightBlueAccent),
+                                        FittedBox(
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 10,),
+                                              Text(
+                                                "${product[i].price} ৳",
+                                                style: TextStyle(
+                                                  color: product[i].offerPrice !=
+                                                      null
+                                                      ? Colors.black
+                                                      : Colors.redAccent,
+                                                  fontSize: 16,
+                                                  decoration:
+                                                  product[i].offerPrice ==
+                                                      null
+                                                      ? TextDecoration.none
+                                                      : TextDecoration.lineThrough,
+                                                ),
+                                              ),
+                                            const  SizedBox(width: 10,),
+
+                                              if (product[i].offerPrice != null)
+                                              Text(
+                                                "${product[i].offerPrice} ৳",
+                                                style: const TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(height: 25),
                                         Row(

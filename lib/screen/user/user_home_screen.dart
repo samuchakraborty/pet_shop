@@ -55,7 +55,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
             ),
           ),
           // automaticallyImplyLeading: false,
-          title: const Text("Pet Shop"),
+          title: const Text("Petify"),
           centerTitle: true,
           actions: [
             GestureDetector(

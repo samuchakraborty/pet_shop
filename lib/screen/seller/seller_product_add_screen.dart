@@ -67,7 +67,7 @@ class _SellerProductAddScreenState extends ConsumerState<SellerProductAddScreen>
                       controller: name,
                       labelName: 'Product Name',
                       hintTextName: 'Enter Product Name',
-                      textInputType: TextInputType.number,
+                      textInputType: TextInputType.emailAddress,
                       validateFunction: (value) {},
                     ),
                     const SizedBox(
